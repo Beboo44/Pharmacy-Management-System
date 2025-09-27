@@ -1,0 +1,223 @@
+@startuml
+
+' ====== Base Classes ======
+class Person {
+    - String name
+    - String phoneNumber
+    - String gender
+    + Person(String, String, String)
+    + updateInfo(...): void
+     #displayInfo(): void
+}
+
+abstract class Employee {
+    - double salary
+    - int age
+    - String email
+    - String password
+    - static PharmacyManagementSystem system
+    + Employee(...)
+    + getSalary(): double
+    + getAge(): int
+    + getEmail(): String
+    + getPassword(): String
+    + setSalary(double): void
+    + setAge(int): void
+    + setEmail(String): void
+    + changePassword(String, String): void
+    + updateInfo(...): void
+    + displayInfo(): void
+    + getSystem(): PharmacyManagementSystem
+    + setSystem(PharmacyManagementSystem): void
+}
+
+' ====== Pharmacist ======
+class Pharmacist {
+    - int id
+    - String shiftStartTime
+    - String shiftEndTime
+    + Pharmacist(...)
+    + addProduct(Product): void
+    + removeProduct(String): void
+    + removeExpiredProducts(): void
+    + displayInfo(): void
+    + updateInfo(...): void
+    + searchByID(int): void
+}
+
+' ====== Client ======
+class Client {
+    - Order lastOrder
+    - int numberOfOrders
+    + Client(...)
+    + getLastOrder(): Order
+    + getNumberOfOrders(): int
+    + setLastOrder(Order): void
+    + setNumberOfOrders(int): void
+    + displayInfo(): void
+    + searchByPhoneNumber(String): void
+}
+
+' ====== Manager ======
+class Manager {
+    - static Manager instance
+    + hirePharmacist(Pharmacist): void
+    + firePharmacist(int): void
+    + getManager(): Manager
+    + setManager(...): void
+}
+
+
+
+' ====== Pharmacy Management System ======
+class PharmacyManagementSystem {
+    - ArrayList<Pharmacist> pharmacistsList
+    - ArrayList<Client> clientsList
+    - ArrayList<Product> productsList
+    - int numberOfPharmacists
+    - int numberOfClients
+    - int numberOfProducts
+    - double revenue
+    + PharmacyManagementSystem()
+    + addPharmacist(Pharmacist): void
+    + removePharmacist(int): void
+    + addClient(Client): void
+    + removeClient(String): void
+    + addProduct(Product): void
+    + removeProduct(String): void
+    + getPharmacistsList(): ArrayList<Pharmacist>
+    + updateRevenue(double): void
+    + containsPharmacist(Pharmacist): boolean
+    + containsClient(Client): boolean
+    + containsProduct(Product): boolean
+}
+
+' ====== Inheritance ======
+Person <|-- Employee
+Employee <|-- Pharmacist
+Employee <|-- Manager
+Person <|-- Client
+
+' ====== Associations ======
+PharmacyManagementSystem "1" o-- "*" Pharmacist
+PharmacyManagementSystem "1" o-- "*" Client
+PharmacyManagementSystem "1" o-- "*" Product
+
+' Interface
+interface Expirable {
+  +isExpired(): boolean
+  +getExpiryDates(): ArrayList<LocalDate>
+}
+
+' ====== Product (abstract) ======
+abstract class Product {
+    - String productName
+    - int quantity
+    - double price
+    - int id
+    - ArrayList<Integer> quantities
+    + Product(String, int, double, int)
+    + getQuantity(): int
+    + displayInfo(): void
+    + compareTo(Product): int
+}
+
+' Medicine class
+class Medicine {
+  -type: String
+  -isNeedPrispiction: boolean
+  -amount: int
+  -symptom: String
+  -expirydate: LocalDate
+  -expiryDates: ArrayList<LocalDate>
+  +Medicine(...)
+  +isIsNeedPrispiction(): boolean
+  +isExpired(): boolean
+}
+
+' FirstAid class
+class FirstAid {
+  -reusable: boolean
+  -intendUsage: String
+  -expirydate: LocalDate
+  -expiryDates: ArrayList<LocalDate>
+
+  +FirstAid(...)
+  +isReusable(): boolean
+  +getIntendUsage(): String
+  +setReusable(flag: boolean): void
+  +setIntendUsage(usage: String): void
+  +isExpired(): boolean
+  +getExpiryDates(): ArrayList<LocalDate>
+}
+
+' SelfCare class
+class SelfCare {
+  -type: String
+  -category: String
+  -size: int
+  -expirydate: LocalDate
+  -expiryDates: ArrayList<LocalDate>
+
+  +SelfCare(...)
+  +isExpired(): boolean
+}
+
+' Device class
+class Device {
+  -measuredParameter: String
+  -measuringUnit: String
+  -guarantee: int
+
+  +Device(...)
+  +isRefunded(purchaseDate: LocalDate): boolean
+  +displayInfo(): void
+}
+
+' Relationships
+Product <|-- Medicine
+Product <|-- FirstAid
+Product <|-- SelfCare
+Product <|-- Device
+
+Expirable <|.. Medicine
+Expirable <|.. FirstAid
+Expirable <|.. SelfCare
+
+
+' Order class
+class Order {
+  -quantity: ArrayList<Integer>
+  -orderDate: LocalDate
+  -clientName: String
+  -requestedProducts: ArrayList<Product>
+
+  +Order(clientName: String, requestedProducts: ArrayList<Product>, quantity: ArrayList<Integer>, orderDate: LocalDate)
+  +getQuantity(): ArrayList<Integer>
+  +getTotalCost(): double
+  +getProducts(): ArrayList<Product>
+  +placeOrder(): void
+  +printBill(): void
+}
+
+' Payment class
+class Payment {
+  -totalCost: double
+  -paymentMethod: String
+  -cardId: String
+  -password: int
+  -paymentAmount: int
+
+  +Payment(totalCost: double, paymentMethod: String, paymentAmount: int)
+  +Payment(totalCost: double, paymentMethod: String, cardId: String, password: int)
+  +getRemainingAmount(): double
+  +displayInfo(): void
+}
+
+
+
+' Associations
+Order --> "requestedProducts" Product : places
+Payment --> Order : pays for
+
+@enduml
