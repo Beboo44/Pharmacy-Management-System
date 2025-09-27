@@ -28,4 +28,4 @@ This project demonstrates strong use of **Object-Oriented Programming (OOP)** co
 ## 🚀 How to Run
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/pharmacy-management-system.git
+   git clone https://github.com/Beboo44/Pharmacy-Management-System.git
